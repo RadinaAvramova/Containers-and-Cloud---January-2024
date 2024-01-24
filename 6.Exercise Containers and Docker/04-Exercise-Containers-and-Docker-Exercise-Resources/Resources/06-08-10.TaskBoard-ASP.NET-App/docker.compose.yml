@@ -1,0 +1,31 @@
+# docker run -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=myStrongPassword12# -p 1433:1433 -v sqldata:/var/opt/mssql --network taskboard --name sqlserver -d mcr.microsoft.com/mssql/server
+# docker run -p 5000:80 --rm --name web_app --network taskboard -d taskboard
+
+version: "3"
+services:
+    sqlserver:
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=myStrongPassword12#
+        ports:
+            - 1433:1433
+        volumes:
+            - sqldata:/var/opt/mssql
+        networks:
+            - taskboard_network
+        container_name: sqlserverradi
+        image: mcr.microsoft.com/mssql/server
+    taskboard:
+        ports:
+            - 5000:80
+        container_name: web_app
+        networks:
+            - taskboard_network
+        #image: taskboard
+        build: 
+          dockerfile: .\TaskBoard.WebApp\Dockerfile
+networks:
+    taskboard_network:
+        external: true
+volumes:
+    sqldata:
