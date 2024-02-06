@@ -57,7 +57,7 @@ resource "azurerm_linux_web_app" "alwa" {
 }
 
 resource "azurerm_mssql_server" "mssql" {
-  name                         = "task-board-sql-${random_integer.ri}"
+  name                         = "task-board-sql-${random_integer.ri.result}"
   resource_group_name          = azurerm_resource_group.rg.name
   location                     = azurerm_resource_group.rg.location
   version                      = "12.0"
@@ -66,7 +66,7 @@ resource "azurerm_mssql_server" "mssql" {
 }
 
 resource "azurerm_mssql_database" "database" {
-  name           = "TaskBoardDB${random_integer.ri}"
+  name           = "TaskBoardDB${random_integer.ri.result}"
   server_id      = azurerm_mssql_server.mssql.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
   license_type   = "LicenseIncluded"
