@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+    mongodb:
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=max
+            - MONGO_INITDB_ROOT_PASSWORD=secret
+        volumes:
+            - data:/data/db
+        image: mongo
+        networks:
+          - goals
+    backend:
+        ports:
+            - 80:80
+        volumes:
+            - logs:/logs
+            - node_module:/node_modules
+        image: radinaavramova/goals-backend
+    frontend:
+        ports:
+            - 3000:3000
+        volumes:
+            - .\frontend\src:/src/src
+        image: radinaavramova/goals-frontend
+networks:
+    goals:
+      external: true
+volumes:
+    data:
+    logs:
+    node_modules:
