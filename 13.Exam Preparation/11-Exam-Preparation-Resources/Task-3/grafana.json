@@ -1,13 +1,13 @@
 {
-    "datasouce":{
+    "datasource": {
         "type": "prometheus",
-        "uid":"db5078e4-c4c3-4a1e-b4e4-f7e9421d6fa5"
+        "uid": "db5078e4-c4c3-4a1e-b4e4-f7e9421d6fa5"
     },
     "fieldConfig": {
         "defaults": {
             "custom": {
                 "lineWidth": 1,
-                "filOpacity": 80,
+                "fillOpacity": 80,
                 "gradientMode": "none",
                 "hideForm": {
                     "tooltip": false,
@@ -34,6 +34,18 @@
                 ]
             }
         },
-        "overrides": []
+        "overrides": [
+            {
+                "matcher": {
+                    "id": "byName",
+                    "options": "CPU Usage" // Example: Match by metric name
+                },
+                "properties": {
+                    "color": "blue",
+                    "fillOpacity": 50,
+                    "lineWidth": 2
+                }
+            }
+        ]
     }
 }
