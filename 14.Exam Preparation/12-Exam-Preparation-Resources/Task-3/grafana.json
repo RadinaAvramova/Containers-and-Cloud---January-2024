@@ -1,0 +1,39 @@
+{
+    "datasouce":{
+        "type": "prometheus",
+        "uid":"db5078e4-c4c3-4a1e-b4e4-f7e9421d6fa5"
+    },
+    "fieldConfig": {
+        "defaults": {
+            "custom": {
+                "lineWidth": 1,
+                "filOpacity": 80,
+                "gradientMode": "none",
+                "hideForm": {
+                    "tooltip": false,
+                    "viz": false,
+                    "legend": false
+                }
+            },
+            "unitScale": true,
+            "color": {
+                "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                    {
+                        "color": "green",
+                        "value": null
+                    },
+                    {
+                        "color": "red",
+                        "value": 80
+                    }
+                ]
+            }
+        },
+        "overrides": []
+    }
+}
