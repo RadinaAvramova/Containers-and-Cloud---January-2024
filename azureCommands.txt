@@ -1,0 +1,16 @@
+docker login azure                               -- логин през конзолата в азур
+docker context create aci nginxacicontext        -- създаване на nginx контекст(билд-имидж) през конзолата, където `nginxacicontext` е името на контекста, aci е запазена дума за създаване на контекста
+docker context ls                                -- списък на контекстите
+docker context use nginxacicontext               -- използва контекст с име `nginxacicontext`
+docker context ls                                -- работещият контекст в списъка има `*` след името си
+docker logout                                    -- поради странни обстоятелства, не трябва да сме логнати в докерхъб, за да сработи следващата команда.
+docker run -d -p 80:80 nginxdemos/hello          -- вдигаме имидж nginxdemos/hello
+
+  docker context use default                     -- използва контекста по подразбиране
+  docker context rm nginxacicontext              -- изтрива nginxacicontext
+
+
+az login                                         -- логване в azure, чрез azure CLI
+
+az group create --name trackerapprg --location westeurope                       -- създава ресурсна група с име `trackerapprg` и локация `westeurope`.
+az acr create --resource-group trackerapprg --name trackerappcr --sku Basic     -- създава контейнер в азур използващ, създадената по-горе ресурсна група и задава `Basic` хостинг план

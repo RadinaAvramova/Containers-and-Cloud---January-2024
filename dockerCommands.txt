@@ -1,0 +1,81 @@
+docker image build -t dockerfile .      -- създава image от докерфайл, където 'dockerfile' е името на докерфайла.
+
+docker build -t image-name .            -- създава image of докерфайл в текущата директория, където `image-name` е името на новосъздадения имидж
+docker run -d -p 80:80 image-name       -- вдига контейнер, където image-name е името на имиджа, на порт 80(ако незнам, на кой порт да го вдигна, да погледна докерфайла за експоузнат порт)
+	-- name image-name-container          -- аргумент, който задава името `image-name-container`
+
+
+docker image tag taskboard krasipeace/taskboard       създава версия с име `krasipeace/taskboard` от имиджа taskboard
+
+docker login                                       -- логвам се в dockerhub.
+
+docker tag f7 krasipeace/my-webapp                 създава имиджа в докерхъб, където f7 е id-то на image-a.
+docker push krasipeace/my-webapp                   качва имиджа в докерхъб, като публичен.
+docker run -d -p 8080:8080 krasipeace/my-webapp    отваря локално, вече създаденият имидж от моят докерхъб.
+
+docker network create my_network                   създава мрежа с име my-network.
+docker network rm my_network                       изтрива мрежа с име my_network.
+
+docker run -dit `
+--name wordpress_db `
+-e MYSQL_ROOT_PASSWORD=pass `
+-e MYSQL_DATABASE=wordpressdb `
+-e MYSQL_USER=wordpress `
+-e MYSQL_PASSWORD=wordpress `
+--expose 3306 `
+--expose 33060 `
+--network my_network `
+-v ${PWD}/data:/var/lib/mysql `          %cd%\ ако се използва commandprompt, вместо powershell.
+mysql                                  -- създава мysql контейнер в мрежата my_network.
+
+docker network inspect my_network    -- преглед на мрежата, където my_network е името на мрежата.
+
+docker run -dit `
+--name wordpress-website `
+-e WORDPRESS_DB_HOST=wordpress_db `
+-e WORDPRESS_DB_USER=wordpress `
+-e WORDPRESS_DB_PASSWORD=wordpress `
+-e WORDPRESS_DB_NAME=wordpressdb `
+-v ${PWD}/wp-data:/var/www/html `
+-p 80:80 `
+--network my_network `
+wordpress                                  създава wordpress контейнер в мрежата my_network.
+
+
+docker run -d --name my-apache-app -p 8080:80 -v ${PWD}:/usr/local/apache2/htdocs/ httpd:latest   -- вдига контейнер с apache-app
+
+
+docker-compose build                   създава докеркомпоуз.
+docker-compose up -d                   вдига контейнер от докеркомпоуз.
+docker-compose down --volumes          трие създадените volumes 
+
+
+docker run --name ls-server -p 80:8080  -d lightstreamer:latest                   -вдига контейнер с приложение lightstreamer.
+docker run --name ghost-container -p 3001:2368 -e NODE_ENV=development -d ghost   -вдига контейнер с приложение ghost.
+
+docker run -d --network mariadb_network --name mariadb --env MARIADB_USER=example-user --env MARIADB_PASSWORD=my_cool_secret --env MARIADB_ROOT_PASSWORD=my-secret-pw mariadb   
+                                       вдига контейнер с mariaDB.
+
+docker run -it --network mariadb_network mariadb mariadb -hmariadb -uexample-user -p                  връзва клиента към мрежата mariadb - иска въвеждане на парола.
+docker run -it --network mariadb_network mariadb mariadb -hmariadb -uexample-user -pmy_cool_secret    връзва клиента към мрежата - паролата е в командата.
+                           root@...:/# mariadb --host mariadb --user example-user -p                  влиза в mariadb(от root-a на контейнера mariadb), изисква въвеждане на парола(в текущия случай: my_cool_secret).
+
+docker build -t taskboard -f Taskboard.WebApp\Dockerfile .             създава имидж от докерфайл, генериран във visual studio, където -f задава път лъм докерфайла, 
+                                                                       командата се изпълнява в директорията където се намира .sln файла
+
+docker run -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=yorStrongPassword12# -p 1433:1433 -v sqldata:/var/opt/mssql --network taskboard_network --name sqlserver -d mcr.microsoft.com/mssql/server      
+                                                                       създава контейнер с mssql server, където `--name sqlserver` е името на сървъра за sqlconnection-string-a в приложението(виж appsettings.json) 
+		
+docker build -t krasipeace/taskboard -f Taskboard.WebApp\Dockerfile .      
+                                          създава вече нова версия с направените промени в taskboard-a на имиджа на приложението, стартира в директорията, където се намира .sln файла.
+
+docker run -d -p 5000:80 --name taskboard --network taskboard_network --rm krasipeace/taskboard   вдига контейнер с от имиджа taskboard, в мрежа taskboard_network. 
+                          Клиентски порт: 5000, Сървърен порт: 80. --rm - освобождава системният ресурс, зает от стартирането на контейнера, когато същият е спрян.
+						  
+"-v {host directory path}:{container directory}"             аргумент -v маунтва хост директорията, като volume
+
+
+docker run -d --name frontend -p 3000:3000 --network react-express frontend         -- закача frontend към мрежата react-express
+docker run -d --name mongo -v %cd%\data:/data/db/ --network express-mongo mongo     -- закачa mongo към мрежа express-mongo, с volume, където %cd% (за cmd); ${PWD} за PS
+docker run -d --name backend --network react-express backend                        -- закача backend към мрежа react-express
+docker network connect express-mongo backend                         -- свързва мрежата express-mongo с backend, по този начин backend, вече може да комуникира с две отделни мрежи, описани по-горе
